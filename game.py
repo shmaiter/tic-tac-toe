@@ -1,11 +1,16 @@
+import math
 import time
-from player import HumanPlayer, RandomComputerPlayer
+from player import HumanPlayer, RandomComputerPlayer, SmartComputerPlayer
 
 
 class TicTacToe:
     def __init__(self):
-        self.board = [" " for _ in range(9)]  # fill a list with 9 empty spaces
+        self.board = self.make_board()  # fill a list with 9 empty spaces
         self.current_winner = None
+
+    @staticmethod
+    def make_board():
+        return [" " for _ in range(9)]
 
     def print_board(self):
         # Printing borders of the board
@@ -33,7 +38,7 @@ class TicTacToe:
         return " " in self.board
 
     def num_empty_squares(self):
-        return self.print_board_nums()
+        return self.board.count(" ")
 
     def make_move(self, square, letter):
         if self.board[square] == " ":
@@ -42,9 +47,10 @@ class TicTacToe:
             if self.winner(square, letter):
                 self.current_winner = letter
             return True
+        return False
 
     def winner(self, square, letter):
-        row_ind = square // 3
+        row_ind = math.floor(square / 3)
         # check for winner in rows
         row = self.board[row_ind*3: (row_ind+1)*3]
         if all([spot == letter for spot in row]):
@@ -102,7 +108,7 @@ def play(game, x_player, o_player, print_game=True):
 
 if __name__ == "__main__":
     x_player = HumanPlayer("X")
-    o_player = RandomComputerPlayer("O")
+    o_player = SmartComputerPlayer("O")
 
     t = TicTacToe()
     play(t, x_player, o_player, print_game=True)
